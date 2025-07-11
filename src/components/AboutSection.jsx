@@ -37,10 +37,9 @@ const AboutSection = () => {
       </div>
       {/* Konten Utama di Kiri Bawah */}
       <div className="about-main-content">
-        <h2>Transforming Ideas into Digital Experiences</h2>
+        <h2>Transforming Ideas into Data-Driven Insights</h2>
         <p>
-          You bring the vision, I bring the process – together we build a
-          website that works.
+        With a strong foundation in programming and a keen interest in practical applications of technology, I strive to bring data to life through interactive dashboards and predictive models, helping businesses and organizations make informed, data-backed decisions.
         </p>
         {/* Konten Utama di Kiri Bawah 
         <button className="btn-start-project">Start Your Project</button> */}
@@ -48,15 +47,10 @@ const AboutSection = () => {
       {/* Detail di Kanan */}
       <div className="about-details">
         <p>
-          Hi! I’m Pradipta Deska – a passionate Data Analyst with a growing love
-          for UI/UX design and front-end development. I enjoy turning complex
-          data into simple, user-friendly insights.
+        Hi, I’m Pradipta Deska – a passionate Data Scientist and Technology enthusiast.
         </p>
         <p>
-          Alongside my analytical work, I’m proud to be a consistent learner,
-          always pushing to do better in both tech and business strategy.
-          Outside the screen, you’ll usually catch me exploring new datasets,
-          playing guitar, or casually gaming to relax and recharge.
+        I am currently a 6th-semester student at the Department of Data Science Technology, Faculty of Advanced Technology and Multidisciplinary, Universitas Airlangga. I specialize in Data Science, Machine Learning, and Programming, and I am continuously honing my skills in data analysis, statistics, and algorithm design.
         </p>
         {/* Detail di Kanan 
         <a href="#readmore" className="read-more-link">

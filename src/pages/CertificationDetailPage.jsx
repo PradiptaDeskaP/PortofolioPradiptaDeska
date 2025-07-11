@@ -56,7 +56,7 @@ const CertificationDetailPage = () => {
             </div>
             {/* Ubah <a> menjadi <button> dan tambahkan onClick */}
             <button onClick={handleOpenModal} className="btn-verify">
-              Verify Credential →
+              See All →
             </button>
           </div>
         </div>

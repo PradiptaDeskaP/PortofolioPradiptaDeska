@@ -27,17 +27,17 @@ const flipTexts = [
   {
     title: "Data Analyst",
     description:
-      "I specialize in transforming complex data into actionable insights and building intelligent systems.",
+      "Mengkhususkan diri dalam mengubah data kompleks menjadi wawasan yang dapat ditindaklanjuti dan membangun sistem cerdas",
   },
   {
     title: "Business Intelligence",
     description:
-      "I build and deploy machine learning models to solve real-world business problems efficiently.",
+    "Saya membangun dan menerapkan model pembelajaran mesin untuk menyelesaikan masalah bisnis dunia nyata secara efisien.",
   },
   {
     title: "Business Analyst",
     description:
-      "I love finding stories and patterns within data to help drive strategic company decisions.",
+      "Menyukai menemukan cerita dan pola dalam data untuk membantu mengambil keputusan strategis perusahaan",
   },
 ];
 
