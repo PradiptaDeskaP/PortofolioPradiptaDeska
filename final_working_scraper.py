@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Final Working Radar Surabaya News Scraper
-Menggunakan teknik anti-detection yang canggih
+Versi yang benar-benar dapat bekerja dengan teknik anti-detection terbaru
 """
 
 import requests
@@ -12,86 +12,105 @@ from urllib.parse import urljoin, quote
 import re
 import logging
 import random
-from requests.adapters import HTTPAdapter
-from urllib3.util.retry import Retry
+import itertools
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-class FinalWorkingRadarScraper:
+class FinalWorkingRadarSurabayaScraper:
     def __init__(self):
         self.base_url = "https://radarsurabaya.jawapos.com/"
-        self.session = self.setup_session()
-    
-    def setup_session(self):
-        """Setup session dengan anti-detection"""
-        session = requests.Session()
+        self.session = requests.Session()
         
-        # Retry strategy
-        retry_strategy = Retry(
-            total=3,
-            backoff_factor=2,
-            status_forcelist=[429, 500, 502, 503, 504],
-        )
-        adapter = HTTPAdapter(max_retries=retry_strategy)
-        session.mount("http://", adapter)
-        session.mount("https://", adapter)
+        # Rotasi User Agents
+        self.user_agents = [
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Safari/605.1.15',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/120.0.0.0 Safari/537.36'
+        ]
         
-        # Headers yang sangat realistis
-        session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-            'Accept-Language': 'id-ID,id;q=0.9,en;q=0.8',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Connection': 'keep-alive',
-            'Upgrade-Insecure-Requests': '1',
-            'Sec-Fetch-Dest': 'document',
-            'Sec-Fetch-Mode': 'navigate',
-            'Sec-Fetch-Site': 'none',
-            'Sec-Fetch-User': '?1',
-            'Cache-Control': 'max-age=0',
-            'DNT': '1',
-            'Sec-GPC': '1'
-        })
+        # Rotasi headers
+        self.headers_list = [
+            {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+                'Accept-Language': 'id-ID,id;q=0.9,en;q=0.8',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'Connection': 'keep-alive',
+                'Upgrade-Insecure-Requests': '1',
+                'Sec-Fetch-Dest': 'document',
+                'Sec-Fetch-Mode': 'navigate',
+                'Sec-Fetch-Site': 'none',
+                'Sec-Fetch-User': '?1',
+                'Cache-Control': 'max-age=0',
+                'Referer': 'https://www.google.com/',
+            },
+            {
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+                'Accept-Language': 'en-US,en;q=0.9,id;q=0.8',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'Connection': 'keep-alive',
+                'Upgrade-Insecure-Requests': '1',
+                'Sec-Fetch-Dest': 'document',
+                'Sec-Fetch-Mode': 'navigate',
+                'Sec-Fetch-Site': 'none',
+                'Sec-Fetch-User': '?1',
+                'Cache-Control': 'max-age=0',
+                'Referer': 'https://www.bing.com/',
+            },
+            {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+                'Accept-Language': 'id-ID,id;q=0.8,en-US;q=0.5,en;q=0.3',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'Connection': 'keep-alive',
+                'Upgrade-Insecure-Requests': '1',
+                'Sec-Fetch-Dest': 'document',
+                'Sec-Fetch-Mode': 'navigate',
+                'Sec-Fetch-Site': 'none',
+                'Sec-Fetch-User': '?1',
+                'Cache-Control': 'max-age=0',
+                'Referer': 'https://www.yahoo.com/',
+            }
+        ]
         
-        return session
+        self.current_headers = random.choice(self.headers_list)
+        self.session.headers.update(self.current_headers)
     
-    def random_delay(self, min_seconds=2, max_seconds=5):
-        """Random delay untuk menghindari deteksi"""
-        delay = random.uniform(min_seconds, max_seconds)
-        time.sleep(delay)
+    def rotate_headers(self):
+        """Rotasi headers untuk menghindari deteksi"""
+        self.current_headers = random.choice(self.headers_list)
+        self.session.headers.update(self.current_headers)
+        logger.info(f"Headers dirotasi ke: {self.current_headers['User-Agent'][:50]}...")
     
-    def get_page_content(self, url, retries=3):
-        """Mengambil konten halaman dengan retry dan anti-detection"""
+    def get_page_content(self, url, retries=5):
+        """Mengambil konten halaman dengan retry mechanism dan rotasi headers"""
         for attempt in range(retries):
             try:
                 logger.info(f"Fetching (attempt {attempt + 1}): {url}")
                 
-                # Random delay
-                self.random_delay()
+                # Rotasi headers setiap 2 attempt
+                if attempt % 2 == 0:
+                    self.rotate_headers()
                 
-                # Simulasi referer
-                if 'search' in url or 'cari' in url:
-                    self.session.headers.update({'Referer': self.base_url})
+                # Random delay untuk menghindari deteksi
+                time.sleep(random.uniform(5, 10))
                 
-                response = self.session.get(url, timeout=30, allow_redirects=True)
-                
-                # Cek status code
-                if response.status_code == 403:
-                    logger.warning(f"403 Forbidden - mungkin diblokir")
-                    if attempt < retries - 1:
-                        self.random_delay(5, 10)
-                        continue
-                
+                response = self.session.get(url, timeout=30)
                 response.raise_for_status()
+                
                 logger.info(f"Successfully fetched: {url}")
                 return response.text
                 
             except requests.exceptions.RequestException as e:
                 logger.warning(f"Attempt {attempt + 1} failed: {e}")
                 if attempt < retries - 1:
-                    self.random_delay(3, 8)
+                    time.sleep(random.uniform(10, 20))
                 else:
                     logger.error(f"All attempts failed for {url}")
                     return None
@@ -99,7 +118,7 @@ class FinalWorkingRadarScraper:
         return None
     
     def search_news(self, search_query):
-        """Mencari berita dengan berbagai metode"""
+        """Mencari berita berdasarkan query"""
         try:
             logger.info(f"Memulai pencarian untuk: {search_query}")
             
@@ -115,9 +134,9 @@ class FinalWorkingRadarScraper:
             for search_url in search_urls:
                 logger.info(f"Mencoba URL: {search_url}")
                 content = self.get_page_content(search_url)
-                if content and len(content) > 1000:  # Pastikan konten cukup panjang
+                if content:
                     soup = BeautifulSoup(content, 'html.parser')
-                    articles = self.extract_articles_from_soup(soup)
+                    articles = self.extract_articles(soup)
                     if articles:
                         logger.info(f"Berhasil menemukan {len(articles)} artikel")
                         return articles
@@ -127,9 +146,9 @@ class FinalWorkingRadarScraper:
             # Jika pencarian gagal, coba ambil dari halaman utama
             logger.info("Mencoba mengambil berita terbaru dari halaman utama...")
             content = self.get_page_content(self.base_url)
-            if content and len(content) > 1000:
+            if content:
                 soup = BeautifulSoup(content, 'html.parser')
-                articles = self.extract_articles_from_soup(soup)
+                articles = self.extract_articles(soup)
                 if articles:
                     logger.info(f"Berhasil menemukan {len(articles)} artikel dari halaman utama")
                     return articles
@@ -140,49 +159,39 @@ class FinalWorkingRadarScraper:
             logger.error(f"Error dalam pencarian: {e}")
             return []
     
-    def extract_articles_from_soup(self, soup):
-        """Ekstrak artikel dari BeautifulSoup object"""
+    def extract_articles(self, soup):
+        """Ekstrak artikel dari halaman"""
         articles = []
         
         try:
             # Cari semua link yang mengarah ke artikel
-            article_links = soup.find_all('a', href=re.compile(r'radarsurabaya\.jawapos\.com.*/\d{4}/'))
+            # Gunakan regex yang lebih spesifik untuk artikel
+            article_patterns = [
+                r'radarsurabaya\.jawapos\.com.*/\d{4}/\d{2}/\d{2}/',  # Format tanggal
+                r'radarsurabaya\.jawapos\.com.*/\d{4}/\d{2}/',       # Format bulan
+                r'radarsurabaya\.jawapos\.com.*/berita/',             # Path berita
+                r'radarsurabaya\.jawapos\.com.*/news/'                # Path news
+            ]
             
-            # Juga cari dengan pattern lain
-            additional_links = soup.find_all('a', href=re.compile(r'radarsurabaya\.jawapos\.com.*berita'))
-            article_links.extend(additional_links)
-            
-            # Cari dengan class atau id yang umum
-            class_links = soup.find_all('a', class_=re.compile(r'article|news|post|item', re.I))
-            for link in class_links:
-                if link.get('href') and 'radarsurabaya.jawapos.com' in link.get('href', ''):
-                    article_links.append(link)
-            
-            # Cari semua link yang mengandung kata kunci
             all_links = soup.find_all('a', href=True)
+            article_links = []
+            
             for link in all_links:
                 href = link.get('href', '')
-                if ('radarsurabaya.jawapos.com' in href and 
-                    any(word in href.lower() for word in ['berita', 'news', 'artikel', 'article']) and
-                    '/tag/' not in href and '/category/' not in href):
-                    article_links.append(link)
+                for pattern in article_patterns:
+                    if re.search(pattern, href):
+                        article_links.append(link)
+                        break
             
             logger.info(f"Ditemukan {len(article_links)} link artikel potensial")
             
-            # Remove duplicates
-            seen_urls = set()
-            unique_links = []
-            for link in article_links:
-                url = link.get('href')
-                if url and url not in seen_urls:
-                    if not url.startswith('http'):
-                        url = urljoin(self.base_url, url)
-                    seen_urls.add(url)
-                    unique_links.append((link, url))
-            
             # Proses setiap link
-            for i, (link, article_url) in enumerate(unique_links[:15]):  # Batasi 15 artikel
+            for i, link in enumerate(article_links[:15]):  # Batasi 15 artikel
                 try:
+                    article_url = link.get('href')
+                    if not article_url.startswith('http'):
+                        article_url = urljoin(self.base_url, article_url)
+                    
                     # Cari judul
                     title = link.get_text(strip=True)
                     if not title:
@@ -191,26 +200,42 @@ class FinalWorkingRadarScraper:
                         if parent:
                             title = parent.get_text(strip=True)
                     
-                    if title and len(title) > 10 and len(title) < 200:
+                    # Cari tanggal dan kategori dari parent elements
+                    date = "N/A"
+                    category = "N/A"
+                    
+                    # Cari tanggal
+                    date_elem = link.find_parent().find(['date', 'time', 'span', 'div'], 
+                                                      class_=re.compile(r'date|time|published', re.I))
+                    if date_elem:
+                        date = date_elem.get_text(strip=True)
+                    
+                    # Cari kategori
+                    cat_elem = link.find_parent().find(['span', 'div', 'a'], 
+                                                     class_=re.compile(r'category|cat|tag', re.I))
+                    if cat_elem:
+                        category = cat_elem.get_text(strip=True)
+                    
+                    if title and len(title) > 10:  # Pastikan judul tidak kosong
                         article = {
                             'title': title,
                             'link': article_url,
-                            'date': 'N/A',
-                            'category': 'N/A',
+                            'date': date,
+                            'category': category,
                             'author': 'N/A',
                             'content': 'N/A'
                         }
                         articles.append(article)
-                        logger.info(f"Artikel {i+1}: {title[:50]}...")
+                        logger.info(f"Artikel {len(articles)}: {title[:50]}...")
                 
                 except Exception as e:
-                    logger.debug(f"Error processing article {i+1}: {e}")
+                    logger.debug(f"Error processing article link {i+1}: {e}")
                     continue
             
             return articles
             
         except Exception as e:
-            logger.error(f"Error extracting articles from soup: {e}")
+            logger.error(f"Error extracting articles: {e}")
             return []
     
     def scrape_article_detail(self, article_url):
@@ -230,7 +255,8 @@ class FinalWorkingRadarScraper:
                 '.author', '.writer', '.byline', '.post-author',
                 '.article-author', '.meta .author', '.meta .writer',
                 'span[class*="author"]', 'div[class*="author"]',
-                'a[class*="author"]', 'p[class*="author"]'
+                'a[class*="author"]', 'p[class*="author"]',
+                '.entry-meta .author', '.post-meta .author'
             ]
             
             for selector in author_selectors:
@@ -246,14 +272,15 @@ class FinalWorkingRadarScraper:
             content_selectors = [
                 'article', '.content', '.article-content', '.post-content',
                 '.entry-content', '.news-content', '.main-content', '.story-content',
-                '.single-content', '.post-body', '.article-body'
+                '.single-content', '.post-body', '.article-body', '.story-body',
+                '.entry-body', '.post-text', '.article-text'
             ]
             
             for selector in content_selectors:
                 content_elem = soup.select_one(selector)
                 if content_elem:
                     # Hapus script dan style tags
-                    for script in content_elem(["script", "style", "nav", "header", "footer"]):
+                    for script in content_elem(["script", "style", "nav", "header", "footer", "aside"]):
                         script.decompose()
                     
                     content_text = content_elem.get_text(strip=True)
@@ -297,8 +324,8 @@ class FinalWorkingRadarScraper:
                 
                 complete_news.append(news)
                 
-                # Delay untuk menghindari rate limiting
-                self.random_delay(3, 6)
+                # Random delay untuk menghindari rate limiting
+                time.sleep(random.uniform(8, 15))
             
             logger.info(f"Scraping selesai. Total {len(complete_news)} artikel berhasil diambil")
             return complete_news
@@ -318,7 +345,7 @@ class FinalWorkingRadarScraper:
 
 def main():
     """Fungsi utama"""
-    scraper = FinalWorkingRadarScraper()
+    scraper = FinalWorkingRadarSurabayaScraper()
     
     try:
         # Input query pencarian
@@ -356,11 +383,6 @@ def main():
             
         else:
             print("Tidak ada berita ditemukan atau terjadi error saat scraping.")
-            print("\nKemungkinan penyebab:")
-            print("1. Website memblokir akses scraping")
-            print("2. Perlu menggunakan proxy atau VPN")
-            print("3. Website menggunakan JavaScript yang kompleks")
-            print("4. Perlu menunggu beberapa saat sebelum mencoba lagi")
     
     except KeyboardInterrupt:
         print("\nProses dihentikan oleh user.")
