@@ -12,8 +12,6 @@ Features:
 - Error handling dan logging yang komprehensif
 """
 
-import requests
-from bs4 import BeautifulSoup
 import csv
 import json
 from datetime import datetime
@@ -23,8 +21,18 @@ import re
 import random
 from typing import List, Dict, Optional
 import logging
-from requests.adapters import HTTPAdapter
-from requests.packages.urllib3.util.retry import Retry
+
+# Try to import cloudscraper first (best for Cloudflare bypass)
+try:
+    import cloudscraper
+    CLOUDSCRAPER_AVAILABLE = True
+except ImportError:
+    CLOUDSCRAPER_AVAILABLE = False
+    import requests
+    from requests.adapters import HTTPAdapter
+    from requests.packages.urllib3.util.retry import Retry
+
+from bs4 import BeautifulSoup
 
 # Setup logging
 logging.basicConfig(
@@ -49,18 +57,34 @@ class RadarSurabayaScraper:
     def __init__(self):
         self.base_url = "https://radarsurabaya.jawapos.com"
         self.search_url = f"{self.base_url}/search"
-        self.session = requests.Session()
         
-        # Setup retry strategy
-        retry_strategy = Retry(
-            total=3,
-            backoff_factor=1,
-            status_forcelist=[429, 500, 502, 503, 504],
-            allowed_methods=["HEAD", "GET", "OPTIONS"]
-        )
-        adapter = HTTPAdapter(max_retries=retry_strategy)
-        self.session.mount("http://", adapter)
-        self.session.mount("https://", adapter)
+        # Gunakan cloudscraper jika available (best for Cloudflare bypass)
+        if CLOUDSCRAPER_AVAILABLE:
+            logger.info("✓ Menggunakan cloudscraper untuk bypass Cloudflare protection")
+            self.session = cloudscraper.create_scraper(
+                browser={
+                    'browser': 'chrome',
+                    'platform': 'windows',
+                    'desktop': True
+                },
+                delay=10,  # Delay untuk avoid detection
+                interpreter='native'  # Use native Python interpreter
+            )
+        else:
+            logger.warning("⚠️  cloudscraper tidak terinstall, menggunakan requests biasa")
+            logger.warning("   Install cloudscraper untuk bypass Cloudflare: pip install cloudscraper")
+            self.session = requests.Session()
+            
+            # Setup retry strategy untuk requests biasa
+            retry_strategy = Retry(
+                total=3,
+                backoff_factor=1,
+                status_forcelist=[429, 500, 502, 503, 504],
+                allowed_methods=["HEAD", "GET", "OPTIONS"]
+            )
+            adapter = HTTPAdapter(max_retries=retry_strategy)
+            self.session.mount("http://", adapter)
+            self.session.mount("https://", adapter)
         
         # Headers yang lebih lengkap dan realistis untuk bypass anti-bot
         self.session.headers.update({
@@ -121,27 +145,49 @@ class RadarSurabayaScraper:
                     time.sleep(delay)
                 
                 response = self.session.get(url, timeout=30, allow_redirects=True)
-                
-                # Cek jika ada cloudflare atau captcha
-                if 'cloudflare' in response.text.lower() or 'captcha' in response.text.lower():
-                    logger.warning("Detected Cloudflare/Captcha protection, retrying...")
-                    time.sleep(5)
-                    continue
-                
                 response.raise_for_status()
+                
+                # Cek jika ada cloudflare atau captcha (hanya jika tidak pakai cloudscraper)
+                if not CLOUDSCRAPER_AVAILABLE:
+                    response_text_lower = response.text.lower()
+                    if 'cloudflare' in response_text_lower or 'just a moment' in response_text_lower:
+                        logger.error("❌ Detected Cloudflare protection! Requests biasa tidak bisa bypass.")
+                        logger.error("   SOLUSI: Install cloudscraper untuk bypass Cloudflare:")
+                        logger.error("   pip install cloudscraper")
+                        raise Exception("Cloudflare protection detected. Install cloudscraper to bypass.")
+                    
+                    if 'captcha' in response_text_lower:
+                        logger.error("❌ Detected CAPTCHA protection!")
+                        logger.error("   SOLUSI: Gunakan Selenium version:")
+                        logger.error("   python radar_scraper_selenium.py")
+                        raise Exception("CAPTCHA detected. Use Selenium version instead.")
+                
                 return response
                 
-            except requests.exceptions.HTTPError as e:
-                if e.response.status_code == 403:
-                    logger.warning(f"403 Forbidden pada attempt {attempt + 1}/{max_retries}")
+            except Exception as e:
+                # Handle berbagai jenis exception (requests, cloudscraper, dll)
+                error_msg = str(e)
+                
+                # Check if it's a 403 error
+                if hasattr(e, 'response') and hasattr(e.response, 'status_code'):
+                    if e.response.status_code == 403:
+                        logger.warning(f"403 Forbidden pada attempt {attempt + 1}/{max_retries}")
+                        if attempt < max_retries - 1:
+                            wait_time = (attempt + 1) * 5
+                            logger.info(f"Menunggu {wait_time}s sebelum retry...")
+                            time.sleep(wait_time)
+                            continue
+                        raise
+                
+                # Check if it's Cloudflare or CAPTCHA error
+                if 'Cloudflare' in error_msg or 'cloudflare' in error_msg:
+                    logger.error(f"Cloudflare error pada attempt {attempt + 1}/{max_retries}")
                     if attempt < max_retries - 1:
-                        # Tunggu lebih lama untuk retry
-                        wait_time = (attempt + 1) * 5
-                        logger.info(f"Menunggu {wait_time}s sebelum retry...")
-                        time.sleep(wait_time)
+                        time.sleep(10)
                         continue
-                raise
-            except requests.exceptions.RequestException as e:
+                    raise
+                
+                # Generic request error
                 logger.warning(f"Request error pada attempt {attempt + 1}/{max_retries}: {e}")
                 if attempt < max_retries - 1:
                     time.sleep(3)
@@ -515,7 +561,22 @@ def main():
     
     if not results:
         print("\n❌ Tidak ada artikel ditemukan untuk keyword tersebut.")
-        print("Coba dengan keyword lain atau periksa koneksi internet Anda.")
+        print("\n💡 Kemungkinan penyebab:")
+        print("   1. Keyword tidak menghasilkan hasil")
+        print("   2. Website menggunakan Cloudflare protection")
+        print("   3. Koneksi internet bermasalah")
+        
+        if not CLOUDSCRAPER_AVAILABLE:
+            print("\n🔧 SOLUSI UTAMA - Install cloudscraper untuk bypass Cloudflare:")
+            print("   pip install cloudscraper")
+            print("   Lalu jalankan ulang scraper ini")
+        else:
+            print("\n🔧 SOLUSI ALTERNATIF:")
+            print("   1. Tunggu 5-10 menit lalu coba lagi")
+            print("   2. Gunakan Selenium version:")
+            print("      pip install selenium webdriver-manager")
+            print("      python radar_scraper_selenium.py")
+            print("   3. Gunakan VPN untuk ganti IP address")
         return
     
     # Tampilkan ringkasan

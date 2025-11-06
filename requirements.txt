@@ -5,6 +5,9 @@
 requests==2.31.0           # HTTP library untuk request ke website
 beautifulsoup4==4.12.3     # HTML parser untuk extract data
 
+# IMPORTANT: Cloudflare Bypass (REQUIRED untuk radarsurabaya.jawapos.com)
+cloudscraper==1.2.71       # Bypass Cloudflare protection (HIGHLY RECOMMENDED)
+
 # HTML parser backend (pilih salah satu, lxml lebih cepat)
 lxml==5.1.0                # Fast XML and HTML parser
 html5lib==1.1              # Alternative HTML parser (lebih toleran terhadap HTML yang rusak)

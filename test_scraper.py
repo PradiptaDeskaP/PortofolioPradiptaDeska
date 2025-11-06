@@ -116,9 +116,6 @@ def test_imports():
     try:
         print("📦 Checking imports...")
         
-        import requests
-        print("   ✓ requests")
-        
         from bs4 import BeautifulSoup
         print("   ✓ beautifulsoup4")
         
@@ -137,13 +134,26 @@ def test_imports():
         import logging
         print("   ✓ logging")
         
-        from requests.adapters import HTTPAdapter
-        print("   ✓ requests.adapters")
+        # Check cloudscraper (IMPORTANT for Cloudflare bypass)
+        try:
+            import cloudscraper
+            print("   ✓ cloudscraper (Cloudflare bypass enabled)")
+            has_cloudscraper = True
+        except ImportError:
+            print("   ⚠️  cloudscraper NOT installed (Cloudflare bypass disabled)")
+            has_cloudscraper = False
         
-        from requests.packages.urllib3.util.retry import Retry
-        print("   ✓ urllib3.util.retry")
+        import requests
+        print("   ✓ requests")
         
-        print("\n✅ All dependencies imported successfully!")
+        if not has_cloudscraper:
+            print("\n⚠️  WARNING: cloudscraper tidak terinstall!")
+            print("   Website radarsurabaya.jawapos.com menggunakan Cloudflare protection.")
+            print("   Scraper mungkin gagal tanpa cloudscraper.")
+            print("\n   SOLUSI: pip install cloudscraper")
+            print("\n   Continuing with basic tests...")
+        
+        print("\n✅ All core dependencies imported successfully!")
         return True
         
     except ImportError as e:

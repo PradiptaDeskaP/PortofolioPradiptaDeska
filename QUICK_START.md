@@ -8,6 +8,13 @@
 pip install -r requirements.txt
 ```
 
+**IMPORTANT:** Includes `cloudscraper` untuk bypass Cloudflare protection!
+
+If you get Cloudflare errors, make sure cloudscraper is installed:
+```bash
+pip install cloudscraper
+```
+
 ### Step 2: Run the Scraper (30 seconds)
 
 ```bash
