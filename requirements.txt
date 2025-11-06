@@ -1,0 +1,23 @@
+# Radar Surabaya News Scraper - Dependencies
+# =============================================
+
+# Core web scraping libraries
+requests==2.31.0           # HTTP library untuk request ke website
+beautifulsoup4==4.12.3     # HTML parser untuk extract data
+
+# HTML parser backend (pilih salah satu, lxml lebih cepat)
+lxml==5.1.0                # Fast XML and HTML parser
+html5lib==1.1              # Alternative HTML parser (lebih toleran terhadap HTML yang rusak)
+
+# Optional: Untuk scraping website dengan JavaScript (jika diperlukan)
+# selenium==4.15.2         # Browser automation (uncomment jika perlu scrape dynamic content)
+# webdriver-manager==4.0.1 # Automatic webdriver management
+
+# Data processing
+# pandas==2.1.4            # Uncomment jika ingin analisis data lebih lanjut
+
+# Utility
+urllib3==2.1.0             # HTTP client (dependency dari requests)
+charset-normalizer==3.3.2  # Character encoding detection
+certifi==2023.11.17        # SSL certificates
+idna==3.6                  # Internationalized Domain Names
