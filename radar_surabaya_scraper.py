@@ -20,8 +20,11 @@ from datetime import datetime
 from urllib.parse import quote_plus, urljoin
 import time
 import re
+import random
 from typing import List, Dict, Optional
 import logging
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 # Setup logging
 logging.basicConfig(
@@ -47,14 +50,119 @@ class RadarSurabayaScraper:
         self.base_url = "https://radarsurabaya.jawapos.com"
         self.search_url = f"{self.base_url}/search"
         self.session = requests.Session()
+        
+        # Setup retry strategy
+        retry_strategy = Retry(
+            total=3,
+            backoff_factor=1,
+            status_forcelist=[429, 500, 502, 503, 504],
+            allowed_methods=["HEAD", "GET", "OPTIONS"]
+        )
+        adapter = HTTPAdapter(max_retries=retry_strategy)
+        self.session.mount("http://", adapter)
+        self.session.mount("https://", adapter)
+        
+        # Headers yang lebih lengkap dan realistis untuk bypass anti-bot
         self.session.headers.update({
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
             'Accept-Language': 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
             'Accept-Encoding': 'gzip, deflate, br',
+            'DNT': '1',
             'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': 'none',
+            'Sec-Fetch-User': '?1',
+            'Cache-Control': 'max-age=0',
+            'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
         })
+        
         self.results = []
+        self.user_agents = [
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0',
+        ]
+    
+    def _get_page(self, url: str, referer: str = None, max_retries: int = 3) -> requests.Response:
+        """
+        Get halaman dengan retry mechanism dan anti-bot measures
+        
+        Args:
+            url: URL yang akan diakses
+            referer: Referer header (optional)
+            max_retries: Maksimal retry attempts
+            
+        Returns:
+            Response object
+        """
+        for attempt in range(max_retries):
+            try:
+                # Rotate user agent
+                self.session.headers['User-Agent'] = random.choice(self.user_agents)
+                
+                # Set referer jika ada
+                if referer:
+                    self.session.headers['Referer'] = referer
+                elif attempt > 0:
+                    # Setelah attempt pertama, gunakan base_url sebagai referer
+                    self.session.headers['Referer'] = self.base_url
+                
+                # Random delay sebelum request (2-5 detik)
+                if attempt > 0:
+                    delay = random.uniform(2, 5)
+                    logger.info(f"Retry attempt {attempt + 1}, waiting {delay:.1f}s...")
+                    time.sleep(delay)
+                
+                response = self.session.get(url, timeout=30, allow_redirects=True)
+                
+                # Cek jika ada cloudflare atau captcha
+                if 'cloudflare' in response.text.lower() or 'captcha' in response.text.lower():
+                    logger.warning("Detected Cloudflare/Captcha protection, retrying...")
+                    time.sleep(5)
+                    continue
+                
+                response.raise_for_status()
+                return response
+                
+            except requests.exceptions.HTTPError as e:
+                if e.response.status_code == 403:
+                    logger.warning(f"403 Forbidden pada attempt {attempt + 1}/{max_retries}")
+                    if attempt < max_retries - 1:
+                        # Tunggu lebih lama untuk retry
+                        wait_time = (attempt + 1) * 5
+                        logger.info(f"Menunggu {wait_time}s sebelum retry...")
+                        time.sleep(wait_time)
+                        continue
+                raise
+            except requests.exceptions.RequestException as e:
+                logger.warning(f"Request error pada attempt {attempt + 1}/{max_retries}: {e}")
+                if attempt < max_retries - 1:
+                    time.sleep(3)
+                    continue
+                raise
+        
+        raise Exception(f"Failed to get page after {max_retries} attempts")
+    
+    def _visit_homepage_first(self):
+        """
+        Kunjungi homepage dulu untuk mendapatkan cookies dan terlihat lebih natural
+        """
+        try:
+            logger.info("Mengakses homepage terlebih dahulu untuk mendapatkan cookies...")
+            response = self._get_page(self.base_url)
+            logger.info("✓ Homepage berhasil diakses, cookies diperoleh")
+            time.sleep(random.uniform(1, 3))  # Random delay seperti user real
+            return True
+        except Exception as e:
+            logger.warning(f"Gagal mengakses homepage: {e}")
+            return False
         
     def search_news(self, keyword: str, max_pages: int = 5) -> List[Dict]:
         """
@@ -69,6 +177,9 @@ class RadarSurabayaScraper:
         """
         logger.info(f"Memulai pencarian berita dengan keyword: '{keyword}'")
         self.results = []
+        
+        # Kunjungi homepage dulu untuk mendapatkan cookies
+        self._visit_homepage_first()
         
         # Format keyword untuk URL
         encoded_keyword = quote_plus(keyword)
@@ -85,8 +196,9 @@ class RadarSurabayaScraper:
                     
                 logger.info(f"Scraping halaman {page}: {current_url}")
                 
-                response = self.session.get(current_url, timeout=30)
-                response.raise_for_status()
+                # Gunakan _get_page dengan referer
+                referer = self.base_url if page == 1 else search_query_url
+                response = self._get_page(current_url, referer=referer)
                 
                 soup = BeautifulSoup(response.content, 'html.parser')
                 
@@ -102,17 +214,21 @@ class RadarSurabayaScraper:
                 # Scrape detail untuk setiap artikel
                 for idx, article in enumerate(articles, 1):
                     logger.info(f"Mengambil detail artikel {idx}/{len(articles)}: {article.get('title', 'Unknown')[:50]}...")
-                    detail = self._scrape_article_detail(article['url'])
+                    detail = self._scrape_article_detail(article['url'], referer=current_url)
                     
                     if detail:
                         article.update(detail)
                         self.results.append(article)
                     
-                    # Delay untuk menghindari rate limiting
-                    time.sleep(1)
+                    # Random delay untuk menghindari rate limiting (1-3 detik)
+                    time.sleep(random.uniform(1, 3))
                 
                 page += 1
-                time.sleep(2)  # Delay antar halaman
+                # Random delay antar halaman (3-6 detik)
+                if page <= max_pages:
+                    delay = random.uniform(3, 6)
+                    logger.info(f"Menunggu {delay:.1f}s sebelum halaman berikutnya...")
+                    time.sleep(delay)
                 
             except requests.RequestException as e:
                 logger.error(f"Error saat mengakses halaman {page}: {e}")
@@ -203,20 +319,19 @@ class RadarSurabayaScraper:
         
         return articles
     
-    def _scrape_article_detail(self, url: str) -> Optional[Dict]:
+    def _scrape_article_detail(self, url: str, referer: str = None) -> Optional[Dict]:
         """
         Scrape detail artikel dari halaman artikel
         
         Args:
             url: URL artikel lengkap
+            referer: URL referer (halaman sebelumnya)
             
         Returns:
             Dictionary berisi author dan content, atau None jika gagal
         """
         try:
-            response = self.session.get(url, timeout=30)
-            response.raise_for_status()
-            
+            response = self._get_page(url, referer=referer)
             soup = BeautifulSoup(response.content, 'html.parser')
             
             detail_data = {}
