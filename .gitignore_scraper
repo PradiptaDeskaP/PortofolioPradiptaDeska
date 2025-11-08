@@ -1,0 +1,40 @@
+# File hasil scraping
+tribunnews_*.csv
+tribunnews_*.json
+berita_*.csv
+berita_*.json
+contoh_*.csv
+contoh_*.json
+batch_*.csv
+*_berita_*.csv
+*_berita_*.json
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environment
+venv/
+env/
+ENV/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Test files
+test_*.py
+debug_*.py
