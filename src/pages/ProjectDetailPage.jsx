@@ -22,7 +22,7 @@ const ProjectDetailPage = () => {
         ← Back to Projects
       </Link>
 
-      <h1 className="project-page-title">{project.title.split("–")[0]} App</h1>
+      <h1 className="project-page-title">{project.title.split("–")[0]}</h1>
 
       <div className="project-gallery">
         {project.gallery.map((img, index) => (
@@ -39,66 +39,67 @@ const ProjectDetailPage = () => {
 
       <div className="project-main-layout">
         <aside className="project-meta">
-          <div className="meta-item">
-            <span>Category:</span>
-            <p>{project.category}</p>
-          </div>
-          <div className="meta-item">
-            <span>Client:</span>
-            <p>{project.client}</p>
-          </div>
-          <div className="meta-item">
-            <span>Duration:</span>
-            <p>{project.duration}</p>
-          </div>
-          <div className="meta-item">
-            <span>Tools:</span>
-            <div className="tech-logos-container">
-              {project.techLogos?.map((logo, index) => (
-                <img
-                  key={index}
-                  src={logo}
-                  alt={`Technology logo ${index + 1}`}
-                  className="tech-logo-item"
-                />
-              ))}
+          <div className="meta-info-wrapper">
+            <div className="meta-item">
+              <span>Category:</span>
+              <p>{project.category}</p>
+            </div>
+            <div className="meta-item">
+              <span>Client:</span>
+              <p>{project.client}</p>
+            </div>
+            <div className="meta-item">
+              <span>Duration:</span>
+              <p>{project.duration}</p>
+            </div>
+            <div className="meta-item">
+              <span>Tools:</span>
+              <div className="tech-logos-container">
+                {project.techLogos?.map((logo, index) => (
+                  <img
+                    key={index}
+                    src={logo}
+                    alt={`Technology logo ${index + 1}`}
+                    className="tech-logo-item"
+                  />
+                ))}
+              </div>
             </div>
           </div>
           <div className="project-buttons-detail">
-  <a 
-    href={project.previewLink} 
-    className="btn-preview" 
-    target="_blank" 
-    rel="noopener noreferrer"
-  >
-    Preview
-  </a>
-  <a 
-    href={project.liveLink} 
-    className="btn-try-on" 
-    target="_blank" 
-    rel="noopener noreferrer"
-  >
-    Try On
-  </a>
-</div>
+            <a
+              href={project.previewLink}
+              className="btn-preview"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Preview
+            </a>
+            <a
+              href={project.liveLink}
+              className="btn-try-on"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Try On
+            </a>
+          </div>
         </aside>
 
         <section className="project-description-content">
-          <h2 className="project-detail-title">
-            <span className="title-icon">💡</span> {project.title}
-          </h2>
-          <p className="project-overview">{project.overview}</p>
+          <div className="project-problem-section">
+            <h3>Latar Belakang Masalah</h3>
+            <p>{project.problem}</p>
+          </div>
 
-          <h3>Latar Belakang Masalah</h3>
-          <p>{project.problem}</p>
-
-          <h3>Tujuan Proyek</h3>
-          <ul className="project-goals">
-            {project.goals.map((goal, index) => (
-              <li key={index}>✓ {goal}</li>
-            ))}
-          </ul>
+          <div className="project-goals-section">
+            <h3>Tujuan Proyek</h3>
+            <ul className="project-goals">
+              {project.goals.map((goal, index) => (
+                <li key={index}>✓ {goal}</li>
+              ))}
+            </ul>
+          </div>
         </section>
       </div>
     </main>

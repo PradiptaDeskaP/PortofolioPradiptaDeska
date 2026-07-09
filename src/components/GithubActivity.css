@@ -1,0 +1,389 @@
+/* src/components/GithubActivity.css */
+:root {
+  --git-level-0: #ebedf0;
+}
+
+body.dark-mode {
+  --git-level-0: #161b22;
+}
+
+.github-section {
+  width: 100%;
+  padding: 5rem 0;
+  background-color: var(--bg-section-white); /* Very dark background to match mockup */
+  position: relative;
+  overflow: hidden;
+  color: var(--text-primary);
+  font-family: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, sans-serif;
+  scroll-margin-top: 80px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.github-container {
+  max-width: 1050px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1.35fr; /* Matches mockup columns proportion */
+  gap: 3.5rem;
+  align-items: center;
+}
+
+/* ============================================
+   KOLOM KIRI: JUDUL & STATS GRID
+   ============================================ */
+.github-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  width: 100%;
+  min-width: 0;
+}
+
+.github-title {
+  font-size: 3.25rem;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin: 0 0 2.5rem 0;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+}
+
+.github-accent {
+  color: #E040FB; /* Neon magenta */
+  text-shadow: 0 0 20px rgba(224, 64, 251, 0.25);
+}
+
+.github-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+  transition: all 0.3s ease;
+}
+
+.stat-box {
+  padding: 1.5rem;
+  border-right: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: all 0.3s ease;
+}
+
+/* Hilangkan border kanan pada kolom kedua */
+.stat-box:nth-child(2n) {
+  border-right: none;
+}
+
+/* Hilangkan border bawah pada baris terakhir */
+.stat-box:nth-child(3),
+.stat-box:nth-child(4) {
+  border-bottom: none;
+}
+
+.stat-box:hover {
+  background-color: rgba(57, 255, 20, 0.02);
+}
+
+.stat-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+  transition: color 0.3s ease;
+}
+
+.stat-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.stat-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.stat-value {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', monospace; /* Monospace for retro terminal numbers */
+  letter-spacing: -0.05em;
+  line-height: 1;
+  transition: color 0.3s ease;
+}
+
+/* ============================================
+   KOLOM KANAN: TERMINAL BOX & GRAPH
+   ============================================ */
+.github-right {
+  width: 100%;
+  min-width: 0;
+}
+
+.terminal-box {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  box-shadow: var(--shadow-lg);
+  transition: all 0.3s ease;
+}
+
+.terminal-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.35rem;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 0.75rem;
+  transition: border-color 0.3s ease;
+}
+
+.terminal-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  letter-spacing: 0.05em;
+  transition: color 0.3s ease;
+}
+
+.terminal-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.legend-label {
+  font-size: 0.55rem;
+  color: var(--text-secondary);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin: 0 0.15rem;
+  transition: color 0.3s ease;
+}
+
+.legend-square {
+  width: 7px;
+  height: 7px;
+  border-radius: 1.5px;
+}
+
+.terminal-subtitle {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  display: block;
+  transition: color 0.3s ease;
+}
+
+/* ============================================
+   KONTRIBUSI GRID (MAPPING)
+   ============================================ */
+.contribution-container {
+  width: 100%;
+  overflow-x: auto; /* Agar scrollable di mobile */
+  margin-bottom: 1.75rem;
+}
+
+/* Custom scrollbar untuk grid kontribusi */
+.contribution-container::-webkit-scrollbar {
+  height: 5px;
+}
+
+.contribution-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 10px;
+}
+
+.contribution-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+}
+
+.contribution-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(57, 255, 20, 0.3);
+}
+
+.contribution-grid {
+  display: flex;
+  gap: 3.5px; /* Spacing antar kolom */
+  min-width: max-content; /* Mencegah kolom merapat */
+  padding-bottom: 0.5rem;
+}
+
+.grid-column {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5px; /* Spacing antar kotak hari */
+}
+
+.grid-day {
+  width: 9.5px;
+  height: 9.5px;
+  border-radius: 1.5px;
+  transition: transform 0.2s ease, filter 0.2s ease;
+  cursor: pointer;
+}
+
+.grid-day:hover {
+  transform: scale(1.25);
+  filter: brightness(1.2);
+  outline: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Level warna kontribusi */
+.level-0 { background-color: var(--git-level-0); transition: background-color 0.3s ease; }
+.level-1 { background-color: #2b1d3d; }
+.level-2 { background-color: #4A148C; }
+.level-3 { background-color: #7C4DFF; }
+.level-4 { background-color: #E040FB; box-shadow: 0 0 8px rgba(224, 64, 251, 0.4); }
+
+/* Loading State */
+.terminal-loading {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 0;
+}
+
+.loading-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #E040FB;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.75rem;
+}
+
+.loading-bar-wrapper {
+  width: 150px;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.loading-bar {
+  width: 50%;
+  height: 100%;
+  background-color: #E040FB;
+  border-radius: 99px;
+  animation: loading-anim 1.5s infinite ease-in-out;
+}
+
+@keyframes loading-anim {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+/* ============================================
+   TERMINAL FOOTER
+   ============================================ */
+.terminal-footer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border-light);
+  padding-top: 0.85rem;
+  transition: border-color 0.3s ease;
+}
+
+.terminal-query {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+}
+
+.terminal-status {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.status-blink {
+  width: 6px;
+  height: 6px;
+  background-color: #E040FB;
+  border-radius: 50%;
+  animation: pulse-blink 2s infinite ease-in-out;
+  box-shadow: 0 0 6px #E040FB;
+}
+
+@keyframes pulse-blink {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+.status-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #E040FB;
+  letter-spacing: 0.05em;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 992px) {
+  .github-container {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  
+  .github-title {
+    font-size: 2.75rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .github-section {
+    padding: 3.5rem 0;
+  }
+  
+  .github-container {
+    padding: 0 1.25rem;
+  }
+  
+  .github-title {
+    font-size: 2.25rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .stat-box {
+    padding: 1rem 0.75rem;
+  }
+  
+  .stat-value {
+    font-size: 1.6rem;
+  }
+  
+  .terminal-box {
+    padding: 1.15rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .terminal-legend {
+    display: none; /* Hide legend on very narrow screen for compactness */
+  }
+}

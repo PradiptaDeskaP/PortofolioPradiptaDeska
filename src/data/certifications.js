@@ -1,12 +1,12 @@
 // src/data/certifications.js
 
 // Impor gambar/logo untuk sertifikasi Anda
-import linearAplikasi1 from '../images/linearAplikasi1.png';
-import linearAplikasi2 from '../images/linearAplikasi2.png';
-import linearFundamental1 from '../images/linearFundamental1.png';
-import linearFundamental2 from '../images/linearFundamental2.png';
-import adse from '../images/adse.png';
-import digistar from '../images/digistar.png';
+import linearAplikasi1 from '../images_webp/linearAplikasi1.4060ae34a5a3157d8c81.webp';
+import linearAplikasi2 from '../images_webp/linearAplikasi2.7c3002dfe6d1a2109e17.webp';
+import linearFundamental1 from '../images_webp/linearFundamental1.0d05a3b8d6142b7e4d11.webp';
+import linearFundamental2 from '../images_webp/linearFundamental2.c1917b3d93ab8b208e29.webp';
+import adse from '../images_webp/adse.aaa41c286697de48ac94.webp';
+import digistar from '../images_webp/digistar.765f5e76020342992b2a.webp';
 
 export const certificationsData = [
   {

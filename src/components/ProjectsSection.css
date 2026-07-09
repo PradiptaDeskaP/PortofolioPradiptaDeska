@@ -1,185 +1,434 @@
 /* src/components/ProjectsSection.css */
 
-/* Layout Utama Section */
-.projects-section {
-    max-width: 1200px;
-    margin: 0 auto;
+/* Container Utama */
+.projects-section-v2 {
+  width: 100%;
+  padding: 2.5rem 0; /* Mengurangi padding agar section lebih rapat */
+  background-color: var(--bg-section-white);
+  position: relative;
+  overflow: hidden;
+  scroll-margin-top: 100px; /* Jarak aman di bawah floating navbar saat diklik */
+  transition: background-color 0.3s ease;
 }
 
-.projects-title {
-    text-align: center;
-    font-size: 2.0rem;
-    margin-bottom: 2rem;
-    color: #1B1B1B;
+.projects-container-v2 {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr; /* Rasio kolom lebih rapat */
+  gap: 3rem;
+  align-items: center;
+  max-width: 960px; /* Memperkecil lebar maksimal section */
+  margin: 0 auto;
+  padding: 0 2rem;
 }
 
-/* Grid untuk Kartu Proyek */
-.projects-grid {
-    display: grid;
-    /* Membuat 2 kolom dengan lebar yang sama */
+/* ============================================
+   SISI KIRI: JUDUL & DETAIL
+   ============================================ */
+.projects-left-v2 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.projects-section-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-color);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.5rem;
+}
+
+.projects-heading-v2 {
+  font-size: 2.25rem; /* Mengecilkan ukuran judul */
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--text-primary);
+  margin: 0 0 1rem 0;
+  letter-spacing: -0.02em;
+  transition: color 0.3s ease;
+}
+
+.gradient-text-v2 {
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.projects-sub-v2 {
+  font-size: 0.92rem; /* Mengecilkan ukuran font pengantar */
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 0 0 1.5rem 0;
+  max-width: 95%;
+  transition: color 0.3s ease;
+}
+
+.explore-arrow-v2 {
+  width: 44px; /* Lebih kecil */
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid rgba(var(--accent-color-rgb), 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-color);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.explore-arrow-v2 svg {
+  width: 18px; /* Lebih kecil */
+  height: 18px;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.explore-arrow-v2:hover {
+  background-color: var(--accent-color);
+  color: #ffffff;
+  border-color: var(--accent-color);
+  box-shadow: 0 8px 16px rgba(var(--accent-color-rgb), 0.2);
+}
+
+.explore-arrow-v2:hover svg {
+  transform: rotate(45deg) scale(1.1);
+}
+
+/* ============================================
+   SISI KANAN: SLIDER SHOWCASE (LEBIH COMPACT)
+   ============================================ */
+.projects-right-v2 {
+  width: 100%;
+  max-width: 460px; /* Membatasi lebar slider secara ketat */
+  margin-left: auto; /* Meratakan slider ke kanan */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-width: 0; /* Mencegah kolom grid meregang akibat flexbox anak */
+}
+
+/* Slider Container */
+.projects-slider-v2 {
+  width: 100%;
+  max-width: 100%; /* Menjamin tidak membesar melebihi container */
+  overflow: hidden;
+  border-radius: 1rem; /* Sudut lengkungan lebih rapi */
+  box-shadow: var(--shadow-md);
+  background-color: var(--bg-card);
+  transition: background-color 0.3s ease;
+}
+
+/* Track untuk slide */
+.projects-track-v2 {
+  display: flex;
+  width: 100%;
+  transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Masing-masing Slide */
+.project-slide-v2 {
+  flex: 0 0 100%;
+  width: 100%;
+  padding: 0.4rem;
+  box-sizing: border-box;
+}
+
+/* Kartu di dalam Slide */
+.project-card-v2 {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  background-color: var(--bg-card);
+  border-radius: 0.85rem;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+/* Wadah Gambar */
+.slide-image-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9; /* Rasio gambar lebih lebar & tipis */
+  overflow: hidden;
+  background-color: var(--bg-card);
+}
+
+.slide-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Overlay saat hover */
+.slide-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(16, 24, 40, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 2;
+}
+
+.slide-view-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1.1rem;
+  background-color: var(--text-primary);
+  color: var(--bg-global);
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transform: scale(0.9);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: var(--shadow-md);
+}
+
+/* Arrow Circle */
+.arrow-circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 22px;
+  height: 22px;
+  background-color: var(--bg-global);
+  color: var(--text-primary);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.project-arrow-svg {
+  width: 12px;
+  height: 12px;
+  stroke: #ffffff;
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Hover Trigger */
+.project-card-v2:hover .slide-image {
+  transform: scale(1.03);
+}
+
+.project-card-v2:hover .slide-overlay {
+  opacity: 1;
+}
+
+.project-card-v2:hover .slide-view-btn {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.project-card-v2:hover .slide-view-btn:hover .arrow-circle {
+  background-color: var(--accent-color); /* matches premium theme color on hover! */
+}
+
+.project-card-v2:hover .slide-view-btn:hover .project-arrow-svg {
+  transform: translateX(2px);
+}
+
+/* Info Detail Proyek */
+.slide-info {
+  padding: 1.15rem 1rem; /* Padding lebih compact */
+  text-align: left;
+}
+
+.slide-title {
+  font-size: 1.05rem; /* Lebih compact */
+  color: var(--text-primary);
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+.project-card-v2:hover .slide-title {
+  color: var(--accent-color);
+}
+
+/* Metadata di bawah judul */
+.slide-meta {
+  margin-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+  padding-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: border-color 0.3s ease;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.meta-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  min-width: 42px; /* Menyelaraskan teks label */
+  transition: color 0.3s ease;
+}
+
+.meta-value {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background-color: var(--bg-global);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.meta-tech-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.tech-pill {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--accent-color);
+  background-color: rgba(var(--accent-color-rgb), 0.06);
+  border: 1px solid rgba(var(--accent-color-rgb), 0.15);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.project-card-v2:hover .tech-pill {
+  background-color: var(--accent-color);
+  color: #ffffff;
+  border-color: var(--accent-color);
+}
+
+/* ============================================
+   DOTS PAGINATION
+   ============================================ */
+.projects-pagination-v2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.25rem; /* Lebih rapat */
+}
+
+.pagination-dot-v2 {
+  width: 8px; /* Lebih kecil */
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background-color: var(--border-color);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.pagination-dot-v2:hover {
+  background-color: #d0d5dd;
+}
+
+.pagination-dot-v2.active {
+  background-color: var(--accent-color);
+  width: 22px; /* Lebih pendek */
+  border-radius: 50px;
+  box-shadow: 0 4px 8px rgba(var(--accent-color-rgb), 0.2);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 992px) {
+  .projects-section-v2 {
+    padding: 2.5rem 0;
+  }
+
+  .projects-container-v2 {
     grid-template-columns: 1fr;
-    gap: 1rem; /* Jarak antar kartu bisa sedikit dikurangi */
-}
+    gap: 2rem;
+    padding: 0 1.25rem;
+  }
 
-/* GAYA KARTU DIUBAH TOTAL */
-.project-card {
-    position: relative;
-    display: flex;
-    flex-direction: column; /* Mengatur item secara vertikal */
-    text-decoration: none; /* Menghapus garis bawah dari link */
-    background-color: #fff;
-    border-radius: 1.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-}
-
-/* Gaya untuk Pop-up Tag */
-.project-popup-tag {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    
-    /* Posisikan di atas kartu dan tengahkan */
-    transform: translate(-50%, -50%);
-    
-    background-color: #1B1B1B; /* Warna off-black */
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 999px; /* Bentuk pil */
-    font-size: 0.875rem;
-    font-weight: 500;
-    white-space: nowrap; /* Agar teks tidak turun baris */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-
-    /* Sembunyikan secara default */
-    opacity: 0;
-    visibility: hidden;
-    
-    /* Animasi transisi */
-    transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s;
-}
-
-/* Munculkan Pop-up saat kartu di-hover */
-.project-card:hover .project-popup-tag {
-    opacity: 1;
-    visibility: visible;
-    /* Efek muncul sedikit ke atas */
-    transform: translate(-50%, -120%);
-}
-
-
-.project-card:hover {
-    transform: translateY(-5px); /* Efek terangkat saat hover */
-    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.08);
-}
-
-/* WADAH GAMBAR BARU */
-.image-container {
-    position: relative;
-    border-radius: 1.5rem;
-    overflow: hidden;
-    aspect-ratio: 16 / 10;
-}
-
-.card-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.4s ease;
-}
-
-.project-card:hover .card-image {
-    transform: scale(1.05); /* Sedikit zoom pada gambar saat hover */
-}
-
-/* INFO PROYEK DI BAWAH GAMBAR */
-.project-info {
-    padding: 1rem 1.25rem;
-    text-align: left;
-}
-
-.project-category {
-    display: block;
-    font-size: 0.8rem;
-    color: #667085; /* Warna abu-abu yang lebih lembut */
-    margin-bottom: 0.25rem;
-    font-weight: 500;
-}
-
-.project-title {
-    font-size: 1.1rem;
-    color: #101828; /* Warna teks lebih gelap */
-    font-weight: 600;
-    margin: 0;
-}
-
-
-/* Efek Hover (Overlay & Tombol) */
-.card-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(27, 27, 27, 0.5);
-    opacity: 0; /* Sembunyikan overlay secara default */
-    transition: opacity 0.3s ease-in-out;
-}
-
-.project-card:hover .card-overlay {
-    opacity: 1; /* Munculkan overlay saat kartu di-hover */
-}
-
-.card-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
+  .projects-left-v2 {
     align-items: center;
+    text-align: center;
+  }
+
+  .projects-sub-v2 {
+    margin: 0 auto 1.5rem auto;
+    max-width: 100%;
+    font-size: 0.88rem;
+  }
+
+  .explore-arrow-v2 {
+    display: none;
+  }
+
+  .projects-heading-v2 {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .projects-right-v2 {
+    max-width: 100%;
+    margin-left: 0;
+  }
 }
 
-.view-project-button {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.6rem 1.2rem;
-    background-color: white;
-    color: #1B1B1B;
-    border-radius: 999px;
-    font-weight: 500;
-    transform: scale(0.9); /* Sedikit kecil secara default */
-    opacity: 0;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-}
+@media (max-width: 480px) {
+  .projects-container-v2 {
+    padding: 0 1rem;
+  }
 
-.project-card:hover .view-project-button {
-    transform: scale(1); /* Membesar saat hover */
-    opacity: 1;
-}
+  .projects-heading-v2 {
+    font-size: 1.75rem;
+  }
 
-.arrow-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 24px;
-    height: 24px;
-    background-color: #1B1B1B;
-    color: white;
-    border-radius: 50%;
-}
+  .projects-sub-v2 {
+    font-size: 0.85rem;
+    line-height: 1.45;
+  }
 
-/* Terapkan 2 kolom hanya untuk layar yang lebih besar (tablet ke atas) */
-@media (min-width: 768px) {
-    .projects-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-/* 3 kolom untuk layar desktop */
-@media (min-width: 1024px) {
-    .projects-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
+  .slide-info {
+    padding: 1rem;
+  }
+
+  .slide-title {
+    font-size: 1rem;
+  }
+
+  .meta-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .meta-label {
+    min-width: auto;
+  }
+
+  .meta-value {
+    font-size: 0.7rem;
+    padding: 0.1rem 0.4rem;
+  }
+
+  .tech-pill {
+    font-size: 0.7rem;
+    padding: 0.1rem 0.4rem;
+  }
 }

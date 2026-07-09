@@ -2,9 +2,9 @@
 
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion"; // <-- Impor hooks animasi
-import { experiencesData } from '../data/experiences';
-import { TimelineLogo } from './TimelineLogo';
-import './ExperiencesSection.css';
+import { experiencesData } from "../data/experiences";
+import { TimelineLogo } from "./TimelineLogo";
+import "./ExperiencesSection.css";
 
 const ExperiencesSection = () => {
   // 1. Buat ref untuk container utama sebagai target scroll
@@ -22,10 +22,10 @@ const ExperiencesSection = () => {
   return (
     <section className="experiences-section">
       <div className="experiences-title-wrapper">
-  <div className="corner-accent-box">
-    <h2>Experiences</h2>
-  </div>
-</div>
+        <div className="corner-accent-box">
+          <h2>Experiences</h2>
+        </div>
+      </div>
       {/* 4. Terapkan ref ke container timeline */}
       <div className="timeline-container" ref={containerRef}>
         {/* Garis statis abu-abu di belakang */}
@@ -37,8 +37,11 @@ const ExperiencesSection = () => {
         />
 
         {experiencesData.map((exp, index) => (
-          <div key={index} className={`timeline-item timeline-item-${exp.side}`}>
-            <TimelineLogo 
+          <div
+            key={index}
+            className={`timeline-item timeline-item-${exp.side}`}
+          >
+            <TimelineLogo
               scrollYProgress={scrollYProgress}
               totalItems={experiencesData.length}
               index={index}

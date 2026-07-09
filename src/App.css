@@ -1,19 +1,83 @@
-/* src/App.css */
+.App {
+  width: 100%;
+  overflow-x: hidden;
+}
 
 .page-content {
   width: 100%;
   overflow-x: hidden;
 }
 
+:root {
+  --bg-global: #f9f7fc;
+  --bg-section-white: #ffffff;
+  --bg-card: #ffffff;
+  --text-primary: #101828;
+  --text-secondary: #475467;
+  --border-color: #eaecf0;
+  --border-light: #f1f5f9;
+  --glass-bg: rgba(255, 255, 255, 0.35);
+  --glass-border: rgba(255, 255, 255, 0.25);
+  --glass-shadow: rgba(0, 0, 0, 0.05);
+  --hero-bg: linear-gradient(180deg, #f9f7fc 0%, #ffffff 100%);
+  --badge-bg: rgba(255, 255, 255, 0.7);
+  --badge-border: rgba(255, 255, 255, 0.3);
+  --badge-text-strong: #1e293b;
+  --button-outline-bg: white;
+  --button-outline-border: #e2e8f0;
+  --button-outline-text: #1e293b;
+  --shadow-sm: 0 4px 15px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.15);
+  
+  --primary-gradient: linear-gradient(135deg, #7C4DFF 0%, #4A148C 100%);
+  --accent-color: #7C4DFF;
+  --accent-color-rgb: 124, 77, 255;
+  
+  --timeline-line-color: #dee2e6;
+  --timeline-card-shadow: rgba(0, 0, 0, 0.05);
+  --timeline-arrow-color: #dee2e6;
+}
+
+body.dark-mode {
+  --bg-global: #1A1625;
+  --bg-section-white: #221E2F;
+  --bg-card: #272236;
+  --text-primary: #f8fafc;
+  --text-secondary: #c7bcd6;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-light: rgba(255, 255, 255, 0.05);
+  --glass-bg: rgba(26, 22, 37, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: rgba(0, 0, 0, 0.4);
+  --hero-bg: linear-gradient(180deg, #1A1625 0%, #221E2F 100%);
+  --badge-bg: rgba(39, 34, 54, 0.6);
+  --badge-border: rgba(255, 255, 255, 0.08);
+  --badge-text-strong: #f8fafc;
+  --button-outline-bg: rgba(255, 255, 255, 0.03);
+  --button-outline-border: rgba(255, 255, 255, 0.15);
+  --button-outline-text: #f8fafc;
+  --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 10px 40px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 20px 80px rgba(0, 0, 0, 0.5);
+  
+  --primary-gradient: linear-gradient(135deg, #7C4DFF 0%, #E040FB 100%);
+  --accent-color: #7C4DFF;
+  --accent-color-rgb: 124, 77, 255;
+  
+  --timeline-line-color: rgba(255, 255, 255, 0.1);
+  --timeline-card-shadow: rgba(0, 0, 0, 0.3);
+  --timeline-arrow-color: rgba(255, 255, 255, 0.1);
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #fcf5fe;
-  
+  background: var(--bg-global);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .content {
@@ -25,23 +89,30 @@ body {
 
 /* Gaya untuk Pointer yang Mengikuti Mouse */
 .following-pointer {
-  position: fixed; /* Tetap di layar meskipun di-scroll */
+  position: fixed;
+  /* Tetap di layar meskipun di-scroll */
   /* Posisikan ujung kiri atas div tepat di ujung mouse */
   transform: translate(-50%, -50%);
-  z-index: 9999; /* Pastikan selalu di paling atas */
-  pointer-events: none; /* Penting! Agar tidak menghalangi klik pada elemen di bawahnya */
+  z-index: 9999;
+  /* Pastikan selalu di paling atas */
+  pointer-events: none;
+  /* Penting! Agar tidak menghalangi klik pada elemen di bawahnya */
   transition: opacity 0.2s;
 }
 
 .pointer-content {
   display: flex;
   align-items: center;
-  gap: 0.5rem; /* Jarak antara avatar dan teks */
-  background-color: #0099ff; /* Warna biru seperti di contoh */
+  gap: 0.5rem;
+  /* Jarak antara avatar dan teks */
+  background-color: #0099ff;
+  /* Warna biru seperti di contoh */
   color: white;
   padding: 0.5rem 1rem;
-  border-radius: 999px; /* Membuatnya berbentuk pil */
-  white-space: nowrap; /* Mencegah teks turun baris */
+  border-radius: 999px;
+  /* Membuatnya berbentuk pil */
+  white-space: nowrap;
+  /* Mencegah teks turun baris */
   box-shadow: 0 4px 15px rgba(0, 153, 255, 0.4);
 }
 

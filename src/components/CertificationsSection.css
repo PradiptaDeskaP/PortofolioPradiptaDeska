@@ -11,7 +11,8 @@
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 3rem;
-    color: #1B1B1B;
+    color: var(--text-primary);
+    transition: color 0.3s ease;
 }
 
 .certifications-grid {
@@ -35,10 +36,11 @@
     display: flex;
     flex-direction: column;
     text-decoration: none;
-    background-color: #fff;
+    background-color: var(--bg-card);
     border-radius: 1.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .certification-card:hover {
@@ -51,11 +53,12 @@
     border-radius: 1.5rem;
     overflow: hidden;
     aspect-ratio: 16 / 10;
-    background-color: #f8f9fa; /* Warna jika gambar tidak penuh */
+    background-color: var(--bg-global); /* Warna jika gambar tidak penuh */
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 1rem;
+    transition: background-color 0.3s ease;
 }
 
 .cert-image {
@@ -77,16 +80,18 @@
 .cert-issuer {
     display: block;
     font-size: 0.8rem;
-    color: #667085;
+    color: var(--text-secondary);
     margin-bottom: 0.25rem;
     font-weight: 500;
+    transition: color 0.3s ease;
 }
 
 .cert-title {
     font-size: 1.1rem;
-    color: #101828;
+    color: var(--text-primary);
     font-weight: 600;
     margin: 0;
+    transition: color 0.3s ease;
 }
 
 .cert-card-overlay {
@@ -110,12 +115,12 @@
 .verify-button {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.5rem; /* slightly tighter gap for cleaner look */
     padding: 0.6rem 1.2rem;
-    background-color: white;
-    color: #1B1B1B;
+    background-color: var(--text-primary);
+    color: var(--bg-global);
     border-radius: 999px;
-    font-weight: 500;
+    font-weight: 600; /* slightly bolder for premium feel */
     transform: scale(0.9);
     opacity: 0;
     transition: transform 0.3s ease, opacity 0.3s ease;
@@ -124,4 +129,83 @@
 .certification-card:hover .verify-button {
     transform: scale(1);
     opacity: 1;
+}
+
+.arrow-icon-svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--bg-global);
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.certification-card:hover .verify-button .arrow-icon-svg {
+    transform: translateX(4px);
+}
+
+/* ===== RESPONSIVE MOBILE PARALLAX CAROUSEL (JITTER STYLE) ===== */
+@media (max-width: 768px) {
+    .certifications-section {
+        padding: 3rem 1.5rem;
+        overflow: hidden; /* Prevent horizontal container bleed issues */
+    }
+
+    .certifications-grid {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        padding: 1.5rem 2rem;
+        gap: 1.25rem;
+        margin: 0 -2rem; /* Bleed carousel full width to screen edges */
+    }
+
+    /* Hide scrollbar for standard browsers */
+    .certifications-grid::-webkit-scrollbar {
+        display: none;
+    }
+    .certifications-grid {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .certification-card {
+        flex: 0 0 80vw; /* Card occupies 80% viewport width for previewing next card */
+        max-width: 320px;
+        scroll-snap-align: center;
+        transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease;
+    }
+
+    /* Subtle zoom effect for active card */
+    .certification-card {
+        transform: scale(0.97);
+    }
+    
+    /* Center cards look slightly scaled up */
+    .certification-card {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    }
+
+    .cert-image-container {
+        aspect-ratio: 16 / 11;
+        padding: 0; /* Full bleed image inside container */
+        border-radius: 1.5rem 1.5rem 0 0;
+        background-color: var(--bg-card);
+    }
+
+    .cert-image {
+        width: 125%; /* Extra width for sliding boundary */
+        height: 100%;
+        object-fit: cover; /* Cover container to enable full bleed parallax */
+        transform: translateX(calc(var(--scroll-progress, 0) * -16%)) scale(1.08);
+        transition: transform 0.15s cubic-bezier(0.25, 1, 0.5, 1);
+        border-radius: 0;
+    }
+
+    .cert-info {
+        padding: 1.25rem;
+        background-color: var(--bg-card);
+        border-radius: 0 0 1.5rem 1.5rem;
+        border-top: 1px solid var(--border-color);
+    }
 }

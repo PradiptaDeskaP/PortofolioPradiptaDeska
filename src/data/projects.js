@@ -1,30 +1,30 @@
 // src/data/projects.js
 
 // gambar-gambar yang akan digunakan
-import projectImage1 from '../images/foto1.jpg';
-import projectImage2 from '../images/foto2.jpg';
-import projectImage3 from '../images/kupon.jpg';
-import frameImage from '../images/bingkaifoto.jpg';
-import avatarImage from '../images/avatar.png';
-import logoPython from '../images/logo_python2.png'; 
-import logoPowerbi from '../images/powerbi.png'; 
-import logoMysql from '../images/mysql.png'; 
-import logoSheets from '../images/logo_sheets.png'; 
-import logoExcel from '../images/logo_excel.png'; 
-import logoR from '../images/logo_R.png';
-import logoLooker from '../images/looker.png'; 
-import logoColab from '../images/colab.png'; 
+import projectImage1 from '../images_webp/foto1.200f54a4ffa48e32a3ff.webp';
+import projectImage2 from '../images_webp/foto2.d8e82be01ae77cc6c40f.webp';
+import projectImage3 from '../images_webp/kupon.webp';
+import frameImage from '../images_webp/bingkaifoto.3486378b97855acf3346.webp';
+import avatarImage from '../images_webp/avatar.d48a5d00518492bfe234.webp';
+import logoPython from '../images_webp/logo_python2.619e73b0bd6dc257548b.webp';
+import logoPowerbi from '../images_webp/powerbi.af208df23f726c9d033e.webp';
+import logoMysql from '../images_webp/mysql.7c08cca32a24231460fe.webp';
+import logoSheets from '../images_webp/logo_sheets.ad592eca753fbffe95a1.webp';
+import logoExcel from '../images_webp/logo_excel.314b8bee69b3ced04794.webp';
+import logoR from '../images_webp/logo_R.b2c7b2e680afaf1d930f.webp';
+import logoLooker from '../images_webp/looker.webp';
+import logoColab from '../images_webp/colab.webp';
 
-import klasifikasi1 from '../images/klasifikasi1.png';
-import klasifikasi2 from '../images/klasifikasi2.png';
+import klasifikasi1 from '../images_webp/klasifikasi1.webp';
+import klasifikasi2 from '../images_webp/klasifikasi2.578f59b04a5e57f2a020.webp';
 
-import clustering1 from '../images/clustering1.png'; 
-import clustering2 from '../images/clustering2.png'; 
-import clustering3 from '../images/clustering3.png'; 
+import clustering1 from '../images_webp/clustering1.f5bf33eb12d399e27d55.webp';
+import clustering2 from '../images_webp/clustering2.ea75f411b059ef8fde4a.webp';
+import clustering3 from '../images_webp/clustering3.2f2ee483484719838da5.webp';
 
-import app1 from '../images/app1.png'; 
-import app2 from '../images/app2.png'; 
-import app3 from '../images/app3.png'; 
+import app1 from '../images_webp/app1.7e771dfc1d239ca5b121.webp';
+import app2 from '../images_webp/app2.4bfc0f598ed23498c0d7.webp';
+import app3 from '../images_webp/app3.b3359d710bd0d4f278c7.webp';
 
 export const projectsData = [
   {

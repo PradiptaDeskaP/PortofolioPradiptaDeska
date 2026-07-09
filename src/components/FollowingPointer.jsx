@@ -6,14 +6,27 @@ import { motion, useSpring } from "framer-motion";
 
 
 const FollowingPointer = () => {
-  // 1. Tambahkan state untuk mengontrol visibilitas (terlihat atau tidak)
+  const [isMobile, setIsMobile] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
   const x = useSpring(0, { stiffness: 500, damping: 100 });
   const y = useSpring(0, { stiffness: 500, damping: 100 });
 
   useEffect(() => {
-    // 2. Modifikasi handleMouseMove untuk memeriksa elemen target
+    const checkDevice = () => {
+      setIsMobile(
+        window.innerWidth < 1024 || 
+        window.matchMedia('(pointer: coarse)').matches
+      );
+    };
+    checkDevice();
+    window.addEventListener("resize", checkDevice);
+    return () => window.removeEventListener("resize", checkDevice);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) return;
+
     const handleMouseMove = (event) => {
       const target = event.target;
       
@@ -38,7 +51,9 @@ const FollowingPointer = () => {
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
     };
-  }, [x, y]); // Dependensi tetap sama
+  }, [x, y, isMobile]);
+
+  if (isMobile) return null;
 
   return (
     <motion.div

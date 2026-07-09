@@ -2,8 +2,8 @@
 
 import React from "react";
 import "./AboutSection.css";
-import myPhoto from "../images/foto1.jpg";
-import frameImage from "../images/bingkaifoto.jpg";
+import myPhoto from "../images_webp/foto1.200f54a4ffa48e32a3ff.webp";
+import frameImage from "../images_webp/bingkaifoto.3486378b97855acf3346.webp";
 
 const AboutSection = () => {
   return (

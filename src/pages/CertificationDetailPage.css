@@ -3,20 +3,26 @@
     max-width: 900px;
     margin: 2rem auto;
     padding: 2rem;
-    color: #1B1B1B;
+    color: var(--text-primary);
+    transition: color 0.3s ease;
 }
 .cert-header {
     display: flex;
     align-items: center;
     gap: 2rem;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-color);
     padding-bottom: 1rem;
-    
+    transition: border-color 0.3s ease;
 }
 .cert-logo-large {
     width: 300px;
     height: 300px;
     object-fit: contain;
+    background-color: var(--bg-card);
+    border-radius: 12px;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
 }
 .cert-header-text h1 {
     margin: 0 0 0.5rem 0;
@@ -24,8 +30,9 @@
 }
 .cert-header-text p {
     margin: 0;
-    color: #555;
+    color: var(--text-secondary);
     font-size: 1.1rem;
+    transition: color 0.3s ease;
 }
 .cert-main-content {
     display: flex;
@@ -49,27 +56,44 @@
     line-height: 1.5;
 }
 .credential-item span {
-    color: #777;
+    color: var(--text-secondary);
     font-size: 0.9rem;
+    transition: color 0.3s ease;
 }
 .credential-item p {
     margin: 0.25rem 0 0 0;
     font-weight: 500;
     font-family: monospace;
+    color: var(--text-primary);
+    transition: color 0.3s ease;
 }
 .btn-verify {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     margin-top: 1.5rem;
-    background-color: #1B1B1B;
-    color: white;
+    background-color: var(--text-primary);
+    color: var(--bg-global);
     padding: 0.8rem 1.5rem;
     border-radius: 8px;
     text-decoration: none;
     font-weight: 500;
-    transition: background-color 0.2s;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
 }
 .btn-verify:hover {
-    background-color: #333;
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+.btn-arrow-svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--bg-global);
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.btn-verify:hover .btn-arrow-svg {
+    transform: translateX(4px);
 }
 .cert-not-found {
     text-align: center;
