@@ -1,0 +1,26 @@
+# Radar Surabaya News Scraper - Dependencies
+# =============================================
+
+# CORE DEPENDENCIES (REQUIRED)
+beautifulsoup4==4.12.3     # HTML parser untuk extract data
+lxml==5.1.0                # Fast XML and HTML parser
+
+# SELENIUM - REQUIRED untuk scraper WORKING version
+selenium==4.15.2           # Browser automation (REQUIRED!)
+undetected-chromedriver==3.5.4  # Bypass bot detection (HIGHLY RECOMMENDED!)
+
+# OPTIONAL: Cloudflare Bypass alternative
+cloudscraper==1.2.71       # Alternative Cloudflare bypass
+requests==2.31.0           # HTTP library (for non-Selenium scrapers)
+
+# HTML parser backend alternative
+html5lib==1.1              # Alternative HTML parser
+
+# Data processing
+# pandas==2.1.4            # Uncomment jika ingin analisis data lebih lanjut
+
+# Utility
+urllib3==2.1.0             # HTTP client (dependency dari requests)
+charset-normalizer==3.3.2  # Character encoding detection
+certifi==2023.11.17        # SSL certificates
+idna==3.6                  # Internationalized Domain Names
